@@ -1,19 +1,62 @@
+"use client"
+
 import React from 'react'
 import { Modern_Antiqua } from 'next/font/google'
-import { Playwrite_NG_Modern } from 'next/font/google'
-import LeafLeft from '../assets/images/cocktail-left-leaf.png'
-import RightLeft from '../assets/images/cocktail-right-leaf.png'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { SplitText } from 'gsap/all'
+import LeafLeft from '../assets/images/hero-left-leaf.png'
+import RightLeft from '../assets/images/hero-right-leaf.png'
+import {ScrollTrigger} from 'gsap/ScrollTrigger'
 import Link from 'next/link'
+import { start } from 'repl'
 
+gsap.registerPlugin(ScrollTrigger)
 
 const modernAnntiqua = Modern_Antiqua({ subsets: ['latin'], weight: "400" })
 
 
 const Hero = () => {
+
+  useGSAP(()=>{
+    const heroSplit = new SplitText('.title', { type: 'chars' });
+    const paragraphSplit = new SplitText('.subtitle', {type: 'lines'});
+
+    heroSplit.chars.forEach((char)=>char.classList.add('text-gradient'))
+
+    gsap.from(heroSplit.chars,{
+      yPercent:100,
+      duration:1.8,
+      ease:'expo.out',
+      stagger:0.06
+    })
+
+    gsap.from(paragraphSplit.lines,{
+      opacity:0,
+      yPercent:100,
+      duration:1.8,
+      delay:1,
+      ease:'expo.out',
+      stagger:0.06 
+    })
+
+    gsap.timeline({
+      scrollTrigger:{
+        trigger:'#hero',
+        start:'top top',
+        end:'bottom top',
+        scrub:true
+      }
+    })
+    .to('.right-leaf', { y:50 }, 0 )
+    .to('.left-leaf',{ y:-200 } ,0)
+
+  },[])
+
   return (
     <>
       <section id='hero' className='noisy' >
-        <h1 className={`${modernAnntiqua.className}`}>Mojito</h1>
+        <h1 className={` title ${modernAnntiqua.className}`}>Mojito</h1>
 
         <img 
         className='left-leaf'
@@ -23,10 +66,11 @@ const Hero = () => {
         <img 
         className='right-leaf'
         src={RightLeft.src} 
-        alt="left-leaf" />
+        alt="right-leaf" />
+
 
         <div className='body'>
-          <div className='content'>
+          <div className='content md:mt-30 lg:mt-0'>
             <div className=' space-y-5 hidden md:block '>
               <p>Cool. Crisp. Classic.</p>
 

@@ -11,6 +11,7 @@ const page = () => {
     <div>
       <Navbar/>
       <Hero/>
+      <div className='h-[100vh]'></div>
     </div>
   )
 }
